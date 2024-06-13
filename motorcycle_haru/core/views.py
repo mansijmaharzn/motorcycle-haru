@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import SignUpForm
+from bikes.models import Bike, Brand, Category
 
 
 class SignUpFormView(View):
@@ -30,5 +31,13 @@ class LogoutView(LoginRequiredMixin, View):
     
 
 class IndexView(View):
+    bikes = Bike.objects.all()
+    category = Category.objects.all()
+    brands = Brand.objects.all()
+
     def get(self, request):
-        return render(request, "core/index.html")
+        return render(request, "core/index.html", {
+            'bikes': self.bikes,
+            'category': self.category,
+            'brand': self.brands,
+        })
