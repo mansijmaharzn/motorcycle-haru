@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ bike.name }}{% endblock %}
+{% block content %}
+<div class="grid grid-cols-5 gap-6 m-6 p-6">
+    <div class="col-span-3 aspect-w-16 aspect-h-9 shadow-md hover:shadow-2xl duration-200">
+        <img src="{{ bike.image.url }}" alt="{{ bike.name }}" class="object-cover w-full h-full rounded-xl">
+    </div>
+
+    <div class="col-span-2 p-6 bg-gray-100 rounded-xl shadow-md hover:shadow-2xl duration-200">
+        <h1 class="font-mono font-bold text-6xl text-center mb-6">{{ bike.name }}</h1>
+        <p class="text-xl mb-2"><strong>Price:</strong> Rs. {{ bike.price }}</p>
+        <p class="text-xl mb-2"><strong>Category:</strong> {{ bike.category }}</p>
+        <p class="text-xl mb-2"><strong>Brand:</strong> {{ bike.brand }}</p>
+        <p class="text-xl mb-2"><strong>Owner:</strong> {{ bike.owner }}</p>
+
+        {% if bike.description %}
+        <p class="test-gray-700 text-xl">
+            <strong class="text-gray500">Description:</strong>
+            <br />
+            {{ bike.description }}
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
