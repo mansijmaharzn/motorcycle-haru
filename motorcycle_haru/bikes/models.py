@@ -34,5 +34,8 @@ class Bike(models.Model):
     owner = models.ForeignKey(User, related_name='bikes', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ("-created_at",)
+
     def __str__(self):
         return self.name
