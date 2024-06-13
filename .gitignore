@@ -6,3 +6,6 @@ bike_images
 
 # python cache
 __pycache__
+
+# database
+db.sqlite3
