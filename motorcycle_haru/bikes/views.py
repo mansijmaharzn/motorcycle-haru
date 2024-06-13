@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Bike, Brand, Category
+from .forms import NewBikeForm
 
 
 class DetailView(View):
@@ -14,3 +16,25 @@ class DetailView(View):
             'bike': bike,
             'related_bikes': related_bikes
         })
+    
+
+class NewBikeFormView(LoginRequiredMixin, View):
+    form_class = NewBikeForm
+    initial = {'key': 'value'}
+    template_name = 'bikes/new_bike.html'
+
+    def get(self, request):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {
+            'form': form
+        })
+    
+    def post(self, request):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            bike = form.save(commit=False)
+            bike.owner = request.user
+            bike.save()
+
+            return redirect('bikes:detail', pk=bike.pk)
+        
