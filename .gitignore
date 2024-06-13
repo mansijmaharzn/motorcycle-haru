@@ -1,2 +1,8 @@
 # virtual environment
 .venv
+
+# medias
+bike_images
+
+# python cache
+__pycache__
