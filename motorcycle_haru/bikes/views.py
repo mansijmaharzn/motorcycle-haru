@@ -38,3 +38,9 @@ class NewBikeFormView(LoginRequiredMixin, View):
 
             return redirect('bikes:detail', pk=bike.pk)
         
+
+class DeleteBikeView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        bike = get_object_or_404(Bike, pk=pk, owner=request.user)
+        bike.delete()
+        return redirect('core:index')

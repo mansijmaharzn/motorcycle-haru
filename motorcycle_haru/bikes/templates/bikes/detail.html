@@ -20,6 +20,11 @@
             {{ bike.description }}
         </p>
         {% endif %}
+
+        {% if request.user == bike.owner %}
+        <a href="{% url 'bikes:delete' bike.id %}"
+            class="inline-block mt-6 mx-3 px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl">Delete</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
