@@ -31,13 +31,12 @@ class LogoutView(LoginRequiredMixin, View):
     
 
 class IndexView(View):
-    bikes = Bike.objects.all()
-    category = Category.objects.all()
-    brands = Brand.objects.all()
-
     def get(self, request):
+        bikes = Bike.objects.all()
+        category = Category.objects.all()
+        brands = Brand.objects.all()
         return render(request, "core/index.html", {
-            'bikes': self.bikes,
-            'category': self.category,
-            'brand': self.brands,
+            'bikes': bikes,
+            'category': category,
+            'brand': brands,
         })
