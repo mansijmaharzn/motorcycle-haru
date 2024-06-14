@@ -7,6 +7,15 @@ from .models import Bike, Brand, Category
 from .forms import NewBikeForm, EditBikeForm
 
 
+class BikeView(View):
+    def get(self, request):
+        bikes = Bike.objects.all()
+
+        return render(request, "bikes/bikes.html", {
+            'bikes': bikes
+        })
+
+
 class DetailView(View):
     def get(self, request, pk):
         bike = get_object_or_404(Bike, pk=pk)

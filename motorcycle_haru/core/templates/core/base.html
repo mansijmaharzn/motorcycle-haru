@@ -11,6 +11,7 @@
         <a href="/" class="font-bold text-pink-600 hover:text-pink-500 text-3xl font-mono">Motorcycle Haru</a>
 
         <div class="space-x-6">
+            <a href="{% url 'bikes:bikes' %}" class="px-6 py-3 text-lg font-semibold bg-violet-500 text-white rounded-xl hover:bg-violet-400">Browse Bikes</a>
             {% if user.is_authenticated %}
             <a href="{% url 'bikes:new' %}" class="px-6 py-3 text-lg font-semibold bg-amber-400 text-white rounded-xl hover:bg-amber-300">Add Bike</a>
             <a href="{% url 'core:logout' %}" class="px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-rose-400">Logout</a>

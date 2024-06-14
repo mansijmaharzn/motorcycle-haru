@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% block title %}Bikes{% endblock %}
+{% block content %}
+<div class="px-6 py-12 bg-slate-400">
+    <h2 class="mb-12 text-3xl text-center font-semibold">Posts</h2>
+
+    <div class="grid grid-cols-2 gap-3">
+        {% for bike in bikes %}
+        <div class="m-3 opacity-90 hover:opacity-100 duration-500">
+            <a href="{% url 'bikes:detail' bike.id %}">
+            <div class="aspect-w-16 aspect-h-9">
+                <img src="{{ bike.image.url }}" alt="{{ bike.name }}" class="object-cover w-full h-full rounded-t-xl">
+            </div>
+            <div class="p-6 bg-white rounded-b-xl hover:bg-gray-200">
+                <h2 class="text-2xl font-bold">| {{ bike.brand }} | {{ bike.name }}</h2>
+                <p><strong>Owner:</strong> {{ bike.owner }}</p>
+            </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
