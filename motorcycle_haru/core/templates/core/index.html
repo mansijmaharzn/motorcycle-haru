@@ -2,7 +2,7 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 <div class="px-6 py-12 bg-slate-400">
-    <h2 class="mb-12 text-3xl text-center font-bold">New Posts</h2>
+    <h2 class="mb-12 text-3xl text-center font-semibold">New Posts</h2>
 
     <div class="grid grid-cols-2 gap-3">
         {% for bike in bikes %}
@@ -15,6 +15,23 @@
                 <h2 class="text-2xl font-bold">| {{ bike.brand }} | {{ bike.name }}</h2>
                 <p><strong>Owner:</strong> {{ bike.owner }}</p>
             </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+    <h2 class="mb-12 text-3xl text-center text-semibold">Categories</h2>
+
+    <div class="grid grid-cols-3 gap-3">
+        {% for category in categories %}
+        <div>
+            <a href="#">
+                <div class="p-6 bg-white rounded-b-xl">
+                    <h2 class="text-2xl">{{ category.name }}</h2>
+                    <p class="text-gray-500">{{ category.bikes.count }} bikes</p>
+                </div>
             </a>
         </div>
         {% endfor %}
