@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Bike, Brand, Category
-from .forms import NewBikeForm
+from .forms import NewBikeForm, EditBikeForm
 
 
 class DetailView(View):
@@ -37,7 +37,25 @@ class NewBikeFormView(LoginRequiredMixin, View):
             bike.save()
 
             return redirect('bikes:detail', pk=bike.pk)
-        
+
+
+class EditBikeView(LoginRequiredMixin, View):
+    form_class = EditBikeForm
+    initial = {'key': 'value'}
+    template_name = 'bikes/edit_bike.html'
+
+    def get(self, request, pk):
+        form = self.form_class(initial=self.initial, instance=get_object_or_404(Bike, pk=pk, owner=request.user))
+        return render(request, self.template_name, {
+            'form': form
+        })
+
+    def post(self, request, pk):
+        form = self.form_class(request.POST, instance=get_object_or_404(Bike, pk=pk, owner=request.user))
+        if form.is_valid():
+            form.save()
+            return redirect('bikes:detail', pk=pk)
+
 
 class DeleteBikeView(LoginRequiredMixin, View):
     def get(self, request, pk):

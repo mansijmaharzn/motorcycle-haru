@@ -22,8 +22,10 @@
         {% endif %}
 
         {% if request.user == bike.owner %}
+        <a href="{% url 'bikes:edit' bike.id %}"
+            class="inline-block mt-6 mx-3 px-6 py-3 text-lg font-semibold bg-green-500 text-white rounded-xl hover:bg-green-400">Edit</a>
         <a href="{% url 'bikes:delete' bike.id %}"
-            class="inline-block mt-6 mx-3 px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl">Delete</a>
+            class="inline-block mt-6 mx-3 px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-red-400">Delete</a>
         {% endif %}
     </div>
 </div>
@@ -34,7 +36,7 @@
 
     <div class="grid grid-cols-3 gap-3">
         {% for bike in related_bikes %}
-        <div class="">
+        <div>
             <a href="{% url 'bikes:detail' bike.id %}">
                 <div>
                     <img src="{{ bike.image.url }}" alt="{{ bike.name }}" class="rounded-t-xl">
