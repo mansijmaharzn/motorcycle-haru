@@ -29,11 +29,10 @@ class DetailView(View):
 
 class NewBikeFormView(LoginRequiredMixin, View):
     form_class = NewBikeForm
-    initial = {'key': 'value'}
     template_name = 'bikes/new_bike.html'
 
     def get(self, request):
-        form = self.form_class(initial=self.initial)
+        form = self.form_class()
         return render(request, self.template_name, {
             'form': form
         })
@@ -50,11 +49,10 @@ class NewBikeFormView(LoginRequiredMixin, View):
 
 class EditBikeView(LoginRequiredMixin, View):
     form_class = EditBikeForm
-    initial = {'key': 'value'}
     template_name = 'bikes/edit_bike.html'
 
     def get(self, request, pk):
-        form = self.form_class(initial=self.initial, instance=get_object_or_404(Bike, pk=pk, owner=request.user))
+        form = self.form_class(instance=get_object_or_404(Bike, pk=pk, owner=request.user))
         return render(request, self.template_name, {
             'form': form
         })
