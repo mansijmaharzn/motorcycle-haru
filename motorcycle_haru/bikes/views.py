@@ -11,13 +11,22 @@ from .forms import NewBikeForm, EditBikeForm
 class BikeView(View):
     def get(self, request):
         bikes = Bike.objects.all()
+        categories = Category.objects.all()
+
         query = request.GET.get('query', '')
+        category_id = request.GET.get('category', 0)
+
+        if category_id:
+            bikes = bikes.filter(category_id=category_id)
 
         if query:
             bikes = bikes.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(category__name__icontains=query) | Q(brand__name__icontains=query))
 
         return render(request, "bikes/bikes.html", {
-            'bikes': bikes
+            'bikes': bikes,
+            'categories': categories,
+            'query': query,
+            'category_id': int(category_id)
         })
 
 
