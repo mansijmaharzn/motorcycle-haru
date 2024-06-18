@@ -2,6 +2,14 @@
 {% block title %}Bikes{% endblock %}
 {% block content %}
 <div class="px-6 py-12 bg-slate-400">
+    <div>
+        <form method="get" action="{% url 'bikes:bikes' %}">
+            <input name="query" class="w-full py-4 px-6 border rounded-xl" type="text" value="{{ query }}"
+                placeholder="Search">
+
+            <button class="mt-2 py-4 px-8 text-lg bg-teal-500 text-white rounded-xl hover:bg-teal-400">Search</button>
+        </form>
+    </div>
     <h2 class="mb-12 text-3xl text-center font-semibold">Posts</h2>
 
     <div class="grid grid-cols-2 gap-3">

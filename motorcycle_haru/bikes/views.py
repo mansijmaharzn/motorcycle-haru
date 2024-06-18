@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 from .models import Bike, Brand, Category
 from .forms import NewBikeForm, EditBikeForm
@@ -10,6 +11,10 @@ from .forms import NewBikeForm, EditBikeForm
 class BikeView(View):
     def get(self, request):
         bikes = Bike.objects.all()
+        query = request.GET.get('query', '')
+
+        if query:
+            bikes = bikes.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(category__name__icontains=query) | Q(brand__name__icontains=query))
 
         return render(request, "bikes/bikes.html", {
             'bikes': bikes
