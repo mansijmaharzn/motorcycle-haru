@@ -10,5 +10,3 @@ class BikeAdmin(admin.ModelAdmin):
 admin.site.register(Category)
 admin.site.register(Brand)
 admin.site.register(Bike, BikeAdmin)
-
-#admin fields for data showing in admin panel
