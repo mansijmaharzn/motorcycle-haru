@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'bikes',
+    'review_qa',
 ]
 
 MIDDLEWARE = [

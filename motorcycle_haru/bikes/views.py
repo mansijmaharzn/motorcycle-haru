@@ -6,6 +6,7 @@ from django.db.models import Q
 
 from .models import Bike, Brand, Category
 from .forms import NewBikeForm, EditBikeForm
+from review_qa.forms import NewReviewForm
 
 
 class BikeView(View):
@@ -33,11 +34,15 @@ class BikeView(View):
 class DetailView(View):
     def get(self, request, pk):
         bike = get_object_or_404(Bike, pk=pk)
+        reviews = bike.review.all()
         related_bikes = Bike.objects.filter(category=bike.category).exclude(pk=pk)[:3]
-        
+        form = NewReviewForm
+
         return render(request, "bikes/detail.html", {
             'bike': bike,
-            'related_bikes': related_bikes
+            'reviews': reviews,
+            'related_bikes': related_bikes,
+            'form': form
         })
     
 

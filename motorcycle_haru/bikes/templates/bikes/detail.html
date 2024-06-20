@@ -30,6 +30,39 @@
     </div>
 </div>
 
+<div class="flex justify-center my-10">
+    <h2 class="text-2xl font-mono">Reviews</h2>
+    <div id="reviewList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl w-full mt-8">
+        {% if reviews %}
+            {% for review in reviews %}
+            <div class="border p-4 rounded-lg shadow-md">
+                <p class="text-sm text-gray-500">{{ review.author.username }} - {{ review.date_posted }}</p>
+                <p class="text-gray-900 mb-2 font-semibold">Rating: {{ review.get_rating_display }}</p>
+                <p>{{ review.content }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <h2 id="noReviewsMessage" class="text-xl font-semibold text-center mt-8">No Reviews Yet</h2>
+        {% endif %}
+    </div>
+</div>
+
+{% if request.user.is_authenticated and request.user == bike.owner %}
+<div class="flex justify-center">
+    <form id="reviewForm" action="{% url 'review_qa:add_review' bike.id %}" method="POST">
+        {% csrf_token %}
+
+        <div class="space-y-4">
+            {{ form.as_p }}
+        </div>
+
+        <button type="submit" class="mt-6 py-4 px-8 text-lg bg-purple-500 hover:bg-purple-400 rounded-xl text-white">
+            Add Review
+        </button>
+    </form>
+</div>
+{% endif %}
+
 {% if related_bikes %}
 <div class="m-10 px-10 py-12 bg-gray-100 rounded-xl">
     <h2 class="mb-12 text-2xl text-center">Other Related Bikes</h2>
@@ -50,4 +83,46 @@
         {% endfor %}
     </div>
 {% endif %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#reviewForm').submit(function(event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+
+            var formData = $(this).serialize(); // Serialize the form data
+            var actionUrl = $(this).attr('action'); // Get the form action URL
+
+            $.ajax({
+                type: 'POST',
+                url: actionUrl,
+                data: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Add the CSRF token in the headers
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Handle success (e.g., add the new review to the reviews list)
+                        var newReview = `
+                            <div class="border p-4 rounded-lg shadow-md">
+                                <p class="text-sm text-gray-500">${response.review.author} - ${response.review.date_posted}</p>
+                                <p class="text-gray-900 mb-2 font-semibold">Rating: ${response.review.rating}</p>
+                                <p>${response.review.content}</p>
+                            </div>
+                        `;
+                        $('#reviewList').prepend(newReview);
+                        $('#noReviewsMessage').remove();
+                        $('#reviewForm')[0].reset(); // Reset the form
+                    } else {
+                        // Handle errors (e.g., display error messages)
+                        alert(response.message);
+                        console.error(response.errors);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('An error occurred:', status, error);
+                }
+            });
+        });
+    });
+</script>    
 {% endblock %}
