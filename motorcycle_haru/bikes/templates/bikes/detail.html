@@ -53,7 +53,7 @@
         {% csrf_token %}
 
         <div class="space-y-4">
-            {{ form.as_p }}
+            {{ review_form.as_p }}
         </div>
 
         <button type="submit" class="mt-6 py-4 px-8 text-lg bg-purple-500 hover:bg-purple-400 rounded-xl text-white">
@@ -62,6 +62,39 @@
     </form>
 </div>
 {% endif %}
+
+<div class="flex justify-center my-10">
+    <h2 class="text-2xl font-mono">Questions</h2>
+    <div id="questionList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl w-full mt-8">
+        {% if questions %}
+            {% for question in questions %}
+            <div class="border p-4 rounded-lg shadow-md">
+                <p class="text-sm text-gray-500">{{ question.author.username }} - {{ question.date_posted }}</p>
+                <p>{{ question.content }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <h2 id="noQuestionMessage" class="text-xl font-semibold text-center mt-8">No Questions Yet</h2>
+        {% endif %}
+    </div>
+</div>
+
+{% if request.user.is_authenticated and request.user != bike.owner %}
+<div class="flex justify-center">
+    <form id="questionForm" action="{% url 'review_qa:add_question' bike.id %}" method="POST">
+        {% csrf_token %}
+
+        <div class="space-y-4">
+            {{ question_form.as_p }}
+        </div>
+
+        <button type="submit" class="mt-6 py-4 px-8 text-lg bg-purple-500 hover:bg-purple-400 rounded-xl text-white">
+            Ask Question
+        </button>
+    </form>
+</div>
+{% endif %}
+
 
 {% if related_bikes %}
 <div class="m-10 px-10 py-12 bg-gray-100 rounded-xl">
@@ -101,7 +134,6 @@
                 },
                 success: function(response) {
                     if (response.status === 'success') {
-                        // Handle success (e.g., add the new review to the reviews list)
                         var newReview = `
                             <div class="border p-4 rounded-lg shadow-md">
                                 <p class="text-sm text-gray-500">${response.review.author} - ${response.review.date_posted}</p>
@@ -112,6 +144,42 @@
                         $('#reviewList').prepend(newReview);
                         $('#noReviewsMessage').remove();
                         $('#reviewForm')[0].reset(); // Reset the form
+                    } else {
+                        alert(response.message);
+                        console.error(response.errors);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('An error occurred:', status, error);
+                }
+            });
+        });
+
+        $('#questionForm').submit(function(event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+
+            var formData = $(this).serialize(); // Serialize the form data
+            var actionUrl = $(this).attr('action'); // Get the form action URL
+
+            $.ajax({
+                type: 'POST',
+                url: actionUrl,
+                data: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Add the CSRF token in the headers
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (response.status === 'success') {
+                        var newQuestion = `
+                            <div class="border p-4 rounded-lg shadow-md">
+                                <p class="text-sm text-gray-500">${response.question.author} - ${response.question.date_posted}</p>
+                                <p>${response.question.content}</p>
+                            </div>
+                        `;
+                        $('#questionList').prepend(newQuestion);
+                        $('#noQuestionMessage').remove();
+                        $('#questionForm')[0].reset(); // Reset the form
                     } else {
                         // Handle errors (e.g., display error messages)
                         alert(response.message);
