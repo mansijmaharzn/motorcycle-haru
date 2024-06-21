@@ -25,8 +25,8 @@
 
 <div class="justify-center mx-10 my-10 p-10 bg-emerald-200 rounded-xl shadow-md">
     <h1 class="font-mono text-3xl mb-5">Answers</h1>
-    {% if answers %}
     <div id="answerList" class="space-y-6">
+        {% if answers %}
         {% for answer in answers %}
         <div class="bg-purple-300 rounded-xl p-6 shadow-md">
             <h2 class="text-lg">Author: {{ answer.author }}</h2>
