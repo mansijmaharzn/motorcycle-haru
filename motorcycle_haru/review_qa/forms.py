@@ -32,3 +32,17 @@ class NewQuestionForm(forms.ModelForm):
                 'rows': 2,
             }),
         }
+
+
+class NewAnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ('content',)
+
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'placeholder': 'Enter Answer Here...',
+                'class': 'w-full py-4 px-6 rounded-xl border',
+                'rows': 2,
+            }),
+        }

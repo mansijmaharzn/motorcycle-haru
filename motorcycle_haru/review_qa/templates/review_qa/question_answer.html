@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ question.bike.name }}{% endblock %}
+{% block content %}
+<div class="justify-center mx-10 my-10 p-10 bg-amber-200 rounded-xl shadow-md">
+    <h1 class="font-mono text-3xl mb-5">Question</h1>
+    <h1 class="text-3xl font-semibold">{{ question.bike.name }}</h1>
+    <h2 class="text-lg">Author: {{ question.author }}</h2>
+    <h2 class="text-lg mb-5">Date: {{ question.date_posted }}</h2>
+    <p class="text-xl">{{ question.content }}</p>
+</div>
+
+{% if request.user.is_authenticated %}
+<div class="justify-center mx-10 p-10 bg-indigo-200 rounded-xl shadow-md">
+    <form id="answerForm" action="{% url 'review_qa:add_answer' question.id %}" method="POST">
+        {% csrf_token %}
+
+        {{ answer_form.as_p }}
+
+        <button type="submit" class="mt-6 py-4 px-8 text-lg bg-purple-400 hover:bg-purple-300 rounded-xl text-white">
+            Answer
+        </button>
+    </form>
+</div>
+{% endif %}
+
+<div class="justify-center mx-10 my-10 p-10 bg-emerald-200 rounded-xl shadow-md">
+    <h1 class="font-mono text-3xl mb-5">Answers</h1>
+    {% if answers %}
+    <div id="answerList" class="space-y-6">
+        {% for answer in answers %}
+        <div class="bg-purple-300 rounded-xl p-6 shadow-md">
+            <h2 class="text-lg">Author: {{ answer.author }}</h2>
+            <h2 class="text-lg mb-5">Date: {{ answer.date_posted }}</h2>
+            <p class="text-xl">{{ answer.content }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <h2 class="text-xl font-semibold text-center mt-8">No Answers Yet</h2>
+    {% endif %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#answerForm').submit(function(event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+
+            var formData = $(this).serialize(); // Serialize the form data
+            var actionUrl = $(this).attr('action'); // Get the form action URL
+
+            $.ajax({
+                type: 'POST',
+                url: actionUrl,
+                data: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Add the CSRF token in the headers
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        var newAnswer = `
+                            <div class="bg-purple-300 rounded-xl p-6">
+                                <h2>Author: ${response.answer.author}</h2>
+                                <h2 class="mb-5">Date: ${response.answer.date_posted}</h2>
+                                <p class="text-xl">${response.answer.content}</p>
+                            <div>
+                        `;
+                        $('#answerList').prepend(newAnswer);
+                        $('#noReviewsMessage').remove();
+                        $('#answerForm')[0].reset(); // Reset the form
+                    } else {
+                        alert(response.message);
+                        console.error(response.errors);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('An error occurred:', status, error);
+                }
+            });
+        });
+    });
+</script>   
+{% endblock %}

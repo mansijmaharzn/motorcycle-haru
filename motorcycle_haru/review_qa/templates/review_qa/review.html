@@ -1,0 +1,10 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ review.bike.name }}{% endblock %}
+{% block content %}
+<div class="justify-center my-10 mx-10 p-10 rounded-xl bg-cyan-200">
+<h1 class="text-3xl font-semibold">Rating: {{ review.rating }}</h1>
+<h2>Author: {{ review.author }}</h2>
+<h2 class="mb-3">Date: {{ review.date_posted }}</h2>
+<p class="text-xl">{{ review.content }}</p>
+</div>
+{% endblock %}

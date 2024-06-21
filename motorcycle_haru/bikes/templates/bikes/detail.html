@@ -35,11 +35,13 @@
     <div id="reviewList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl w-full mt-8">
         {% if reviews %}
             {% for review in reviews %}
-            <div class="border p-4 rounded-lg shadow-md">
-                <p class="text-sm text-gray-500">{{ review.author.username }} - {{ review.date_posted }}</p>
-                <p class="text-gray-900 mb-2 font-semibold">Rating: {{ review.get_rating_display }}</p>
-                <p>{{ review.content }}</p>
-            </div>
+            <a href="{% url 'review_qa:review' review.id %}">
+                <div class="border p-4 rounded-lg shadow-md">
+                    <p class="text-sm text-gray-500">{{ review.author.username }} - {{ review.date_posted }}</p>
+                    <p class="text-gray-900 mb-2 font-semibold">Rating: {{ review.get_rating_display }}</p>
+                    <p>{{ review.content|slice:":50" }}...</p>
+                </div>
+            </a>
             {% endfor %}
         {% else %}
             <h2 id="noReviewsMessage" class="text-xl font-semibold text-center mt-8">No Reviews Yet</h2>
@@ -68,10 +70,12 @@
     <div id="questionList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl w-full mt-8">
         {% if questions %}
             {% for question in questions %}
-            <div class="border p-4 rounded-lg shadow-md">
-                <p class="text-sm text-gray-500">{{ question.author.username }} - {{ question.date_posted }}</p>
-                <p>{{ question.content }}</p>
-            </div>
+            <a href="{% url 'review_qa:question' question.id %}">
+                <div class="border p-4 rounded-lg shadow-md">
+                    <p class="text-sm text-gray-500">{{ question.author.username }} - {{ question.date_posted }}</p>
+                    <p>{{ question.content }}</p>
+                </div>
+            </a>
             {% endfor %}
         {% else %}
             <h2 id="noQuestionMessage" class="text-xl font-semibold text-center mt-8">No Questions Yet</h2>

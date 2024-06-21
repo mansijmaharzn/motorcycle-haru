@@ -1,9 +1,11 @@
+from django.shortcuts import render
 from django.views import View
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 
 from bikes.models import Bike
-from .forms import NewReviewForm, NewQuestionForm
+from .models import Review, Question, Answer
+from .forms import NewReviewForm, NewQuestionForm, NewAnswerForm
 
 
 class AddReviewView(View):
@@ -67,3 +69,56 @@ class AddQuestionView(View):
             }
         
         return JsonResponse(response)
+    
+
+class AddAnswerView(View):
+    def post(self, request, question_id):
+        question = get_object_or_404(Question, pk=question_id)
+        form = NewAnswerForm(request.POST)
+
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.question = question
+            answer.author = request.user
+            answer.save()
+
+            response = {
+                'status': 'success',
+                'message': 'Answer added successfully',
+                'answer': {
+                    'content': answer.content,
+                    'author': answer.author.username,
+                    'date_posted': answer.date_posted.strftime('%Y-%m-%d %H:%M:%S')
+                }
+            }
+
+        else:
+            response = {
+                'status': 'error',
+                'message': 'There was an error with your submission.',
+                'errors': form.errors
+            }
+        
+        return JsonResponse(response)
+
+
+class ReviewView(View):
+    def get(self, request, review_id):
+        review = get_object_or_404(Review, pk=review_id)
+
+        return render(request, 'review_qa/review.html', {
+            'review': review
+        })
+
+
+class QuestionView(View):
+    def get(self, request, question_id):
+        question = get_object_or_404(Question, pk=question_id)
+        answers = Answer.objects.filter(question=question)
+        answer_form = NewAnswerForm
+
+        return render(request, 'review_qa/question_answer.html', {
+            'question': question,
+            'answers': answers,
+            'answer_form': answer_form
+        })
