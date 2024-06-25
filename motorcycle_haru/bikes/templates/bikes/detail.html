@@ -139,11 +139,13 @@
                 success: function(response) {
                     if (response.status === 'success') {
                         var newReview = `
+                        <a href="${response.review.url}">
                             <div class="border p-4 rounded-lg shadow-md">
                                 <p class="text-sm text-gray-500">${response.review.author} - ${response.review.date_posted}</p>
                                 <p class="text-gray-900 mb-2 font-semibold">Rating: ${response.review.rating}</p>
                                 <p>${response.review.content}</p>
                             </div>
+                        </a>
                         `;
                         $('#reviewList').prepend(newReview);
                         $('#noReviewsMessage').remove();
@@ -176,10 +178,12 @@
                     console.log(response);
                     if (response.status === 'success') {
                         var newQuestion = `
+                        <a href="${response.question.url}">
                             <div class="border p-4 rounded-lg shadow-md">
                                 <p class="text-sm text-gray-500">${response.question.author} - ${response.question.date_posted}</p>
                                 <p>${response.question.content}</p>
                             </div>
+                        </a>
                         `;
                         $('#questionList').prepend(newQuestion);
                         $('#noQuestionMessage').remove();

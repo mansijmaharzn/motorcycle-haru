@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from django.urls import reverse
 
 from bikes.models import Bike
 from .models import Review, Question, Answer
@@ -26,7 +27,8 @@ class AddReviewView(View):
                     'content': review.content,
                     'rating': review.get_rating_display(),
                     'author': review.author.username,
-                    'date_posted': review.date_posted.strftime('%Y-%m-%d %H:%M:%S')
+                    'date_posted': review.date_posted.strftime('%Y-%m-%d %H:%M:%S'),
+                    'url': reverse('review_qa:review', args=[review.id])
                 }
             }
 
@@ -57,7 +59,8 @@ class AddQuestionView(View):
                 'question': {
                     'content': question.content,
                     'author': question.author.username,
-                    'date_posted': question.date_posted.strftime('%Y-%m-%d %H:%M:%S')
+                    'date_posted': question.date_posted.strftime('%Y-%m-%d %H:%M:%S'),
+                    'url': reverse('review_qa:question', args=[question.id])
                 }
             }
 
