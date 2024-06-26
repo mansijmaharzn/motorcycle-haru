@@ -31,6 +31,14 @@ class NewBikeForm(forms.ModelForm):
                 'class': INPUT_CLASSES,
             }),
         }
+    
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+
+        if price <= 0:
+            raise forms.ValidationError('Price must be greater than 0.')
+        
+        return price
 
 
 class EditBikeForm(forms.ModelForm):
@@ -55,3 +63,11 @@ class EditBikeForm(forms.ModelForm):
                 'class': INPUT_CLASSES,
             }),
         }
+    
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+
+        if price <= 0:
+            raise forms.ValidationError('Price must be greater than 0.')
+        
+        return price

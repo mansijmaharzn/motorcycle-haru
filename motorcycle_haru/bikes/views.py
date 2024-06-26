@@ -79,12 +79,16 @@ class EditBikeView(LoginRequiredMixin, View):
         return render(request, self.template_name, {
             'form': form
         })
+        
 
     def post(self, request, pk):
-        form = self.form_class(request.POST, instance=get_object_or_404(Bike, pk=pk, owner=request.user))
+        bike = get_object_or_404(Bike, pk=pk, owner=request.user)
+        form = self.form_class(request.POST, instance=bike)
         if form.is_valid():
             form.save()
             return redirect('bikes:detail', pk=pk)
+        
+        return render(request, self.template_name, {'form': form, 'bike': bike})  # Handle invalid form
 
 
 class DeleteBikeView(LoginRequiredMixin, View):
